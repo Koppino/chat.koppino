@@ -1,0 +1,41 @@
+<div class="ui container segment login page" id="login-segment-menu">
+    <div class="" >
+        <div class="">
+            <h2 class="ui teal center aligned header">
+                <div class="content">
+                    KOPPINO CHAT
+                </div>
+            </h2>
+            <form method="POST" action="/login" class="ui  form">
+                <div class="ui segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="mail icon"></i>
+                            <input type="text" name="email" placeholder="e-mail " required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="password" placeholder="password" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui segment check">
+                            <input type="checkbox" class="">
+                            <label for="">Auto-save </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="ui fluid large submit button">Login</button>
+                </div>
+
+                <div class="ui error message"></div>
+
+            </form>
+
+            <div class="ui centered aligned message" style="background-color: transparent;">
+                <center>New to us? <a href="/register">Sign Up</a></center>
+            </div>
+        </div>
+    </div>
+</div>

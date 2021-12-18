@@ -1,0 +1,45 @@
+<div class="ui segment">
+    <h2>Uživatelé</h2>
+    <table class="ui inverted celled striped unstackable table">
+        <tr>
+            <th class="collapsing">
+                <center>ID</center>
+            </th>
+            <th class="lp-1">Username</th>
+            <th class="collapsing lp-1">Email</th>
+            <th class="collapsing lp-1">Created at</th>
+            <th class="collapsing lp-1">Last activity</th>
+        </tr>
+        <% users.forEach((userr)=> { %>
+            <tr class="item" class="lp-1">
+                <td class="collapsing">
+                    <%-userr.uid%>
+                </td>
+                <td>
+                    <a href="/users/<%-userr._id%>">
+                        <%-userr.username%>
+                    </a>
+                </td>
+                <td class="collapsing">
+                    <%-userr.email%>
+                </td>
+                <td class="collapsing">
+                    <%-userr.createdAt.toISOString().replace("T", " " ).replace("Z", " " ).substring(8,10)%>.
+                        <%-userr.createdAt.toISOString().replace("T", "" ).replace("Z", "" ).substring(5,7)%>.
+                            <%-userr.createdAt.toISOString().replace("T", "" ).replace("Z", "" ).substring(0,4)%>
+                </td>
+                <td class="collapsing" id="lastActivity">
+                    <%-userr.lastActivity%>
+                </td>
+            </tr>
+            <% })%>
+    </table>
+
+</div>
+
+<script>
+    const lastActivity = document.getElementById("lastActivity");
+    const date = lastActivity.textContent
+    console.log(date);
+
+</script>

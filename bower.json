@@ -1,0 +1,21 @@
+{
+  "name": "chat.koppino",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "Koppino <koppino@koppino.cz>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "public",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic": "semantic-ui#^2.4.1"
+  }
+}

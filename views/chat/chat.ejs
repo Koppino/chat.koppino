@@ -1,0 +1,275 @@
+<div class="ui grid">
+    <div class="four wide column" id="user-list-column">
+        <ul class="ui segment vertical" style="background-color:rgba(50, 50, 50, 0.688);" id="room-list">
+            <div class="header" style="background-color:rgba(50, 50, 50, 0.688);">
+                <h4>
+                    Moje konverzace
+                </h4>
+            </div>
+            <% chatRooms.forEach(room=> { %>
+                <% if(room.usernames[0] !=room.usernames[1]) {%>
+                    <% if(room.usernames[0]==user.username) { %>
+                        <li class="item" id="<%-room.users[1]%>">
+                            <a href="/chat/<%-room.users[1]%>"
+                                style="position: relative; display: inline-block; height:39px; max-lines: 1;">
+                                <img src="/files/admin-file-<%-room.users[1]-%>.jpeg" class="avatar">
+                                <%- room.usernames[1] %>
+                                    <span
+                                        style="display: inline-flex;color:rgba(233, 229, 229, 0.947);max-width: 150px; overflow: hidden;">
+                                        : <%- room.lastMessage.substr(0,12) %>
+                                    </span>
+                                    <span style="display:inline-flex; color:rgba(233, 229, 229, 0.7);">
+                                        - <%= formatTime(room.updatedAt.getTime()) %>
+                                    </span>
+                                    <%if(room.unreadMessage==user._id) {%>
+                                        <div class="ui small red label">new</div>
+                                        <%}%>
+                            </a>
+                        </li>
+                        <% }else { %>
+                            <li class="item" id="<%-room.users[0]%>">
+                                <a href="/chat/<%-room.users[0]%>"
+                                    style="position: relative; display: inline-block; height:39px; max-lines: 1;">
+                                    <img src="/files/admin-file-<%-room.users[0]-%>.jpeg" class="avatar">
+                                    <%- room.usernames[0] %>
+                                        <span
+                                            style="display: inline-flex; color:rgba(233, 229, 229, 0.947);max-width: 150px;overflow: hidden;">
+                                            : <%- room.lastMessage.substr(0,20) %>
+                                        </span>
+                                        <span style="display:inline-flex; color:rgba(233, 229, 229, 0.7);">
+                                            - <%= formatTime(room.updatedAt.getTime()) %>
+                                        </span>
+                                        <%if(room.unreadMessage==user._id) {%>
+                                            <div class="ui small red label">new</div>
+                                            <%}%>
+                                </a>
+                            </li>
+
+                            <% } %>
+                                <% } %>
+                                    <% }) %>
+        </ul>
+    </div>
+    <div class="twelve wide stackable column" id="user-list-column">
+        <div class="ui segment" style="">
+            <%if(chatRoom) {%>
+                <% if(chatRoom.usernames[0] !=user.username) { %>
+                    <h3 class="header"> Zprávy - <%- chatRoom.usernames[0] %>
+                    </h3>
+                    <% } else { %>
+                        <h3 class="header"> Zprávy - <%- chatRoom.usernames[1] %>
+                        </h3>
+                        <%}%>
+                            <%}%>
+                                <ul id="messages">
+                                    <% chatMessages.forEach((message)=> { %>
+                                        <% if(message.msgType=="text" ) { %>
+                                            <% if (message.senderName==user.username) {%>
+                                                <li class="myMsg">
+                                                    <img src="/files/admin-file-<%-user._id-%>.jpeg" class="avatar"
+                                                        style="vertical-align: middle;float: right;">
+                                                    <div class="myMsgSeg">
+                                                        <p>
+                                                            <%-message.message%>
+                                                        </p>
+                                                        <div class="msg-date" id="chat-time">
+                                                            <%= formatTime(message.createdAt.getTime().toString()) %>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <%}else { %>
+                                                    <li class="friendMsg">
+                                                        <%if(chatRoom.usernames[0]==user.username) { %>
+                                                            <img src="/files/admin-file-<%-chatRoom.users[1]-%>.jpeg"
+                                                                class="avatar"
+                                                                style="vertical-align: middle;float: left;">
+                                                            <%} else {%>
+                                                                <img src="/files/admin-file-<%-chatRoom.users[0]-%>.jpeg"
+                                                                    class="avatar"
+                                                                    style="vertical-align: middle;float: left;">
+                                                                <%}%>
+                                                                    <div class="friendMsgSeg">
+                                                                        <p>
+                                                                            <%-message.message%>
+                                                                        </p>
+                                                                        <div class="msg-date" id="chat-time">
+                                                                            <%= formatTime(message.createdAt.getTime().toString())
+                                                                                %>
+                                                                        </div>
+                                                                    </div>
+
+                                                    </li>
+
+                                                    <%}} else {%>
+                                                        <%if(message.senderName==user.username) {%>
+                                                            <li class="myMsg">
+<img src="/files/admin-file-<%-user._id%>.jpeg" alt="" srcset="" class="avatar"style="vertical-align: middle;float: right;">
+<div class="myMsgSeg">
+    <img src="<%-message.imgUrl.substr(6,1000)%>"
+    alt="" srcset=""
+    class="ui small image"> 
+    <div class="msg-date" id="chat-time">
+        <%= formatTime(message.createdAt.getTime().toString())
+            %>
+    </div>
+</div>
+                                                            </li>
+                                                            <%} else { %>
+                                                                <li class="friendMsg">
+
+                                                                    <%if(chatRoom.usernames[0]==user.username) { %>
+                                                                        <img src="/files/admin-file-<%-chatRoom.users[1]-%>.jpeg"
+                                                                            class="avatar"
+                                                                            style="vertical-align: middle;float: left;">
+                                                                        <%} else {%>
+                                                                            <img src="/files/admin-file-<%-chatRoom.users[0]-%>.jpeg"
+                                                                                class="avatar"
+                                                                                style="vertical-align: middle;float: left;">
+                                                                            <%}%>
+
+                                                                                <div class="friendMsgSeg">
+                                                                                    <img src="<%-message.imgUrl.substr(6,1000)%>"
+                                                                                        alt="" srcset=""
+                                                                                        class="ui small image">
+                                                                                        <div class="msg-date" id="chat-time">
+                                                                                            <%= formatTime(message.createdAt.getTime().toString())
+                                                                                                %>
+                                                                                        </div>
+                                                                                </div>
+                                                                </li>
+                                                                <%}%>
+                                                                    <%}})%>
+                                </ul>
+
+                                <% if(chatRoom !=null) { %>
+                                    <form class="ui form" method="POST" action="/chat/<%-chatRoom._id%>">
+                                        <% if(chatRoom.usernames[0]==user.username) { %>
+                                            <input id="reciver" name="reciver" value="<%=chatRoom.users[1]._id%>"
+                                                hidden>
+                                            <input id="sender" name="sender" value="<%=chatRoom.users[0]._id%>" hidden>
+                                            <%} else {%>
+                                                <input id="reciver" name="reciver" value="<%=chatRoom.users[0]._id%>"
+                                                    hidden>
+                                                <input id="sender" name="sender" value="<%=chatRoom.users[1]._id%>"
+                                                    hidden>
+                                                <% } %>
+                                                    <div class="inline field"
+                                                        style="display: inline-flex; width: 100%;padding-top: 2.5em;">
+                                                        <input type="text" class="inputMessage" name="message"
+                                                            id="messageInput" style="min-width:78% ;"
+                                                            placeholder="Text your message." required>
+                                                        <button class="btn" id="send-message">Send</button>
+                                                    </div>
+                                                    <div style="display: inline;justify-items:left;float:left;">
+                                                        <a class="test" id="test"><i class="trash icon"></i></a>
+                                                        <a class="sendimg" id="send-img">
+                                                            <i class="far fa-image"></i>
+                                                        </a>
+                                                        <div class="ui inverted small popup img">
+                                                            <div class="content">
+                                                                <h5>Odeslat obrázek.</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ui inverted left small popup smazat">
+                                                            <div class="content">
+                                                                <h5>Nenávratně smazat celou konverzaci.</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                    </form>
+                                    <% } else { %>
+                                        Zvolte uživatele pro komunikaci sní/m.
+                                        <%}%>
+        </div>
+    </div>
+</div>
+<div class="ui inverted small del modal">
+    <div class="content">
+        <h4> Opravdu ?</h4>
+        <p> Chcete nenávratně smazat celou konverzaci s uživatelem
+            <% if(chatRoom) { %>
+                <%if(chatRoom.usernames[0]==user.username ) { %>
+                    <%- chatRoom.usernames[1]%>
+                        <% } else { %>
+                            <%- chatRoom.usernames[0]%>
+                                <%}%>
+                                    <%}%>
+                                        ?
+        </p>
+    </div>
+    <div class="actions">
+        <div class="ui red cancel button">
+            <i class="remove icon"></i>
+            No
+        </div>
+        <div class="ui green ok  button">
+            <i class="checkmark icon"></i>
+            Yes
+        </div>
+    </div>
+</div>
+<div class="ui inverted img modal">
+    <div class="content">
+        <h4> Poslat IMG</h4>
+        <% if(chatRoom) { %>
+            <form action="/chat/send-img/<%-chatRoom._id%>" method="post" class="ui fluid form"
+                enctype='multipart/form-data'>
+                <input type="file" name="file" id="" placeholder="avatar" required>
+                <input type="submit" value="Send" class="ui fluid button" id="imgSend">
+            </form>
+            <%}%>
+    </div>
+</div>
+
+<script>
+            const theElement = document.getElementById('messages');
+
+const scrollToBottom = (node) => {
+    node.scrollTop = node.scrollHeight;
+}
+scrollToBottom(theElement);
+    $(document).ready(function () {
+        // To scroll to the bottom of a div
+        const theElement = document.getElementById('messages');
+
+        const scrollToBottom = (node) => {
+            node.scrollTop = node.scrollHeight;
+        }
+        scrollToBottom(theElement);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        console.log("document loaded");
+        $('.test')
+            .popup({
+                inline: true,
+                popup: '.popup.smazat'
+            })
+            ;
+             <% if (chatRoom) { %>
+            $('.test').on("click", function () {
+                $('.del.modal')
+                    .modal('show').modal({
+                        onDeny: function () { console.log('denied') },
+                        onApprove: function () {
+                            window.location.href = "/chat/chat-delete/<%-chatRoom._id%>";
+                            emitDeleteChat("<%-chatRoom._id%>")
+                        }
+                    });
+            });
+            <% } %>
+
+            $('.sendimg')
+                .popup({
+                    inline: true,
+                    popup: '.popup.img'
+                });
+
+    });
+    $(window).on("load", function () {
+        console.log("window loaded");
+        $("#room-list").load(window.location.href + " #room-list");
+    });
+</script>

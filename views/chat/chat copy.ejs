@@ -1,0 +1,182 @@
+<div class="ui left aligned grid">
+    <div class="four wide column" id="user-list-column">
+        <ul class="ui segment vertical" style="background-color:rgba(50, 50, 50, 0.688);" id="room-list">
+            <div class="header" style="background-color:rgba(50, 50, 50, 0.688);">
+                <h4>
+                    Moje konverzace
+                </h4>
+            </div>
+            <% chatRooms.forEach(room=> { %>
+                <% if(room.usernames[0] !=room.usernames[1]) {%>
+                    <% if(room.usernames[0]==user.username) { %>
+                        <li class="item" id="<%-room.users[1]%>">
+                            <a href="/chat/<%-room.users[1]%>"
+                                style="position: relative; display: inline-block; height:39px; max-lines: 1;">
+                                <img src="/files/admin-file-<%-room.users[1]-%>.jpeg" class="avatar">
+                                <%- room.usernames[1] %>
+                                    <span
+                                        style="display: inline-flex;color:rgba(233, 229, 229, 0.947);max-width: 150px; overflow: hidden;">
+                                        : <%- room.lastMessage.substr(0,12) %>
+                                    </span>
+                                    <span style="display:inline-flex; color:rgba(233, 229, 229, 0.7);">
+                                        - <%- room.updatedAt.toLocaleString() %>
+                                    </span>
+                                    <%if(room.unreadMessage == user._id) {%>
+                                        <div class="ui small red label">new</div>
+                                        <%}%>
+                            </a>
+                        </li>
+                        <% }else { %>
+                            <li class="item" id="<%-room.users[0]%>">
+                                <a href="/chat/<%-room.users[0]%>"
+                                    style="position: relative; display: inline-block; height:39px; max-lines: 1;">
+                                    <img src="/files/admin-file-<%-room.users[0]-%>.jpeg" class="avatar">
+                                    <%- room.usernames[0] %>
+                                        <span
+                                            style="display: inline-flex; color:rgba(233, 229, 229, 0.947);max-width: 150px;overflow: hidden;">
+                                            : <%- room.lastMessage.substr(0,20) %>
+                                        </span>
+                                        <span style="display:inline-flex; color:rgba(233, 229, 229, 0.7);">
+                                            - <%- room.updatedAt.toLocaleString() %>
+                                        </span>
+                                        <%if(room.unreadMessage == user._id) {%>
+                                            <div class="ui small red label">new</div>
+                                            <%}%>
+                                </a>
+                            </li>
+
+                            <% } %>
+                                <% } %>
+                                    <% }) %>
+        </ul>
+    </div>
+    <div class="twelve wide stackable column" id="user-list-column">
+        <div class="ui segment" style="">
+
+
+            <div class="inline" style="background-color: rgba(50, 50, 50, 0.688);">
+                <% if(chatRoom) { %>
+                    <% if(chatRoom.usernames[0] !=user.username ) { %>
+                        <h2>Zprávy - <%-chatRoom.usernames[0] %>
+                        </h2>
+                        <% } else { %>
+                            <h2>Zprávy - <%-chatRoom.usernames[1] %>
+                            </h2>
+                            <% } %>
+
+                                <%}%>
+            </div>
+            <ul class="ui comments messages" id="messages" style="width: 100%;">
+                <% chatMessages.forEach(msg=> {%>
+                    <li class="comment">
+                        <a class="avatar">
+                            <img style="width:39px;height: 39px;" src="/files/admin-file-<%-msg.sender-%>.jpeg">
+                        </a>
+                        <div class="content">
+                            <a class="author">
+                                <%-msg.senderName%>
+                            </a>
+                            <div class="metadata">
+                                <div class="date">
+                                    <%-msg.createdAt.toLocaleString()%>
+                                </div>
+                                <div class="rating">
+                                    <i class="star icon"></i>
+                                    .
+                                </div>
+                            </div>
+                            <div class="text">
+                                <%-msg.message%>
+                            </div>
+                        </div>
+                    </li>
+                    <%})%>
+            </ul>
+
+            <% if(chatRoom !=null) { %>
+                <form class="ui form" method="POST" action="/chat/<%-chatRoom._id%>">
+                    <% if(chatRoom.usernames[0]==user.username) { %>
+                        <input id="reciver" name="reciver" value="<%=chatRoom.users[1]._id%>" hidden>
+                        <input id="sender" name="sender" value="<%=chatRoom.users[0]._id%>" hidden>
+                        <%} else {%>
+                            <input id="reciver" name="reciver" value="<%=chatRoom.users[0]._id%>" hidden>
+                            <input id="sender" name="sender" value="<%=chatRoom.users[1]._id%>" hidden>
+                            <% } %>
+                                <div class="inline field" style="display: inline-flex; width: 100%;">
+                                    <input type="text" class="inputMessage" name="message" id="messageInput"
+                                        style="min-width:78% ;" placeholder="Text your message." required>
+                                    <button class="btn" id="send-message">Send</button>
+                                </div>
+                                <div style="display: inline;justify-items:left;float:left">
+                                    <a class="test" id="test"><i class="trash icon"></i></a>
+                                    <a href="/chat/chat-delete/<%-chatRoom._id%>"><i
+                                            class="trash alternative icon"></i></a>
+                                    <div class="ui inverted left small popup">
+                                        <div class="content">
+                                            <h5>Nenávratně smazat celou konverzaci.</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                </form>
+                <% } else { %>
+                    Zvolte uživatele pro komunikaci sní/m.
+                    <%}%>
+        </div>
+    </div>
+</div>
+<div class="ui inverted small modal">
+    <div class="content">
+        <h4> Opravdu ?</h4>
+        <p> Chcete nenávratně smazat celou konverzaci s uživatelem 
+            <% if(chatRoom) { %> 
+            <%if(chatRoom.usernames[0] == user.username ) { %>
+                <%- chatRoom.usernames[1]%>
+                <% } else { %>
+                    <%- chatRoom.usernames[0]%>
+                    <%}%>
+                    <%}%>
+            ?</p>
+    </div>
+    <div class="actions">
+        <div class="ui red cancel button">
+            <i class="remove icon"></i>
+            No
+        </div>
+        <div class="ui green ok  button">
+            <i class="checkmark icon"></i>
+            Yes
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        console.log("document loaded");
+        $('.test')
+            .popup({
+                inline: true,
+                popup: '.popup'
+            })
+            ;
+        $('.test').on("click", function () {
+            $('.ui.modal')
+                .modal('show').modal({
+                    onDeny: function (){console.log('denied')},
+                    onApprove: function () {
+                        <% if(chatRoom) { %>
+                        window.location.href = "/chat/chat-delete/<%-chatRoom._id%>"
+                        <% } %>
+                    }
+                })
+        })
+    });
+    $(window).on("load", function () {
+        console.log("window loaded");
+    });
+    $(document).ready(function () {
+
+$("#room-list").load(window.location.href + " #room-list");
+window.scrollTo(0, document.body.scrollHeight);
+});
+</script>
