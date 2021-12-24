@@ -1,3 +1,4 @@
+const Post = require("../models/Post");
 const User = require("../models/User")
 
 module.exports.getUsers = (req, res) => {
@@ -10,8 +11,12 @@ module.exports.getUsers = (req, res) => {
 module.exports.getUser = (req, res) => {
     const _id = req.params._id
     User.findOne({_id:_id}, (err, userr) => {
-        if(err) return console.log(err);
-        res.render('users/user', {user:req.user, userProfile: userr})
+        Post.find({sender:_id},null,{sort:{createdAt:-1}},(err, posts) => {
+            if(err)console.log(err);
+             if(err) return console.log(err);
+        res.render('users/user', {user:req.user, userProfile: userr,posts:posts})
+        })
+       
     })
 }
 

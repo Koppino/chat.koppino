@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const path = require('path');
+const Post = require("../models/Post");
 
 module.exports.getSettings = (req, res) => {
     console.log(req.file)

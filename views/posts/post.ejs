@@ -1,0 +1,121 @@
+<div class="ui grid">
+    <div class="three wide column" id="user-list-column">
+
+        <ul class="room-list" style="width:100%;position: relative; display: inline-block; height:39px; max-lines: 1;">
+            <div class="ui divider"></div>
+            <li class="item" style="vertical-align: middle;width: 100%;">
+
+                <a href="" style="display: inline;">
+                    <i class="user icon" style="display: inline;height: 39px !important;width:39px;"></i>
+                    xxx
+                </a>
+            </li>
+        </ul>
+
+
+    </div>
+    <div class="sixteen wide tablet thirteen wide computer column">
+        <div class="ui segment">
+            <h3>
+                <%-post.title%>
+            </h3>
+            <div class="ui divider"></div>
+            <p style="padding-left: 2em;">
+                <%-post.body%>
+            </p>
+            <%if(post.type===2) {%>
+                <center>
+                    <video onplaying="addView()" class="" src="/<%-post.filesUrl[0]%>" style="background-color: aqua;" controls>
+                </center>
+                <%}%>
+                <div class="ui segment">
+                    
+                </div>
+                <div class="ui segment">
+                    <h4> <i class="database icon"></i> Statistika</h4>
+                    <div class="ui divider"></div>
+                    <div class="ui mini statistic">
+                        <div class="value">
+                            <%-post.views%>
+                        </div>
+                        <div class="label">
+                            <i class="eye icon"></i> Views
+                        </div>
+                      </div>
+                      <div class="ui mini statistic">
+                        <div class="value">
+                            <%-post.likes.length%>
+                        </div>
+                        <div class="label">
+                            <i class="thumbs up icon"></i> Likes
+                        </div>
+                      </div>
+                      <div class="ui mini statistic">
+                        <div class="value">
+                         <%-post.komentare.length%>
+                        </div>
+                        <div class="label">
+                            <i class="comment icon"></i>
+                          Komentáře
+                        </div>
+                      </div>
+                </div>
+               
+                    <div class="ui segment" style="min-height: max-content;">
+                        <h4><i class="comment icon"></i> Komentáře</h4>
+                        <div class="ui divider"></div>
+                        <ul class="">
+                            <%if(post.komentare.length===0) { %>
+                                <li style="margin-bottom: 1rem;">
+                                    <h4>Žádné komentáře.</h4>
+                                </li>
+                                <%} else {%>
+                                    <%post.komentare.forEach(comment=> { %>
+                                        <li class="friendMsg" style="padding-top: 1em;">
+                                            <img src="/files/admin-file-<%-comment.sender%>.jpeg" alt="" srcset=""
+                                                class="avatar" style="vertical-align: middle;float: left;">
+                                            <div class="friendMsgSeg">
+                                                <p style="color:teal; display: inline;">
+                                                    <%-comment.senderName%> :
+                                                </p>
+                                                <p style="color: white !important; display:inline;">
+                                                    <%-comment.comment%>
+                                                </p>
+                                                <div class="msg-date" id="chat-time" style="display:block;">
+                                                    <%= formatTime(comment.createdAt.getTime().toString())%>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <%})}%>
+
+                        </ul>  
+                         <form class="ui form" action="/posts/add-comment/<%-post._id%>" method="post">
+                        <div class="inline field" style="display: inline;width: 100%;">
+                          <input type="text" name="comment" id="" style="display:inline; width: 75%;">
+                          <button type="submit"
+                            style="display:inline; color:teal;background-color: transparent;border:0;">Odeslat</button>
+                        </div>
+
+                      </form>
+                    </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let pocetPlays = 0;
+function addView() {
+    if(pocetPlays === 0) {
+        pocetPlays++;
+        const pid = "<%-post._id%>"
+
+        console.log('added');
+        io().emit('add view stats', {views: pocetPlays, postId: pid});
+
+    }else {
+        console.log('koot')
+    }
+};
+ </script>

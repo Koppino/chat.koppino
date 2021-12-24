@@ -13,24 +13,24 @@
   width: 100%;
 }
 h2,h3,h4 {
-  padding-left: 1.5em;
+  padding-left: 1em;
   font-weight: 500;
   letter-spacing: 3px;
+  color:rgba(0, 208, 255, 0.878);
 }
 #login-segment {
   color:rgb(224, 236, 237);
-  position: relative;
-  padding-left: 1em;
-  top:-80px;
+  margin: 0;
 }
 #login-segment-menu {
-  top:-80px;
-
+  top: -80px;
 }
 .header {
-  padding-top: 6px;
-  color:rgba(238, 237, 237, 0.844);
-  height:36px;
+  color:rgba(0, 208, 255, 0.878);
+}
+select, textarea,option {
+  color: rgba(238, 237, 237, 0.844) !important;
+  background-color: rgba(65, 81, 77, 0.508) !important;
 }
 .form input {
   color: rgba(238, 237, 237, 0.844) !important;
@@ -41,8 +41,9 @@ h2,h3,h4 {
   color: rgba(238, 237, 237, 0.844);
 }
 .ui.segment {
-  background-color: rgba(50, 50, 50, 0.688);
-  overflow-x: auto !important;
+  background-color: rgba(50, 50, 50, 0.658);
+  overflow: visible;
+  position: relative;
 }
 
 .menuitem {
@@ -67,7 +68,7 @@ a {
   color: rgba(0, 208, 255, 0.878) !important;
 }
 .field .container {
-  padding-left: 1em;
+  margin-left: 1em;
 }
 
 button:hover {
@@ -80,13 +81,17 @@ button:hover {
   #user-list-column {
     width: 100% !important;
   }
+  .wide.column {
+    width: 100% !important;
+  }
+
 }
 
 .lp-1 {
   padding-left: 1em;
 }
 tr.item:hover {
-background-color: teal !important;
+background-color: rgba(0, 208, 255, 0.878) !important;
 }
 
 .btn {
@@ -101,6 +106,7 @@ background-color: teal !important;
 }
 li{
   list-style: none;
+  margin-left: 1em;
 }
 
 .date{
@@ -113,7 +119,7 @@ li{
   color:rgba(238, 237, 237, 0.644)
 }
 .avatar {
-  margin-left: 12px;
+  margin-left: 6px;
   width: 33px;
   height: 33px !important;
   overflow: hidden;
@@ -146,6 +152,7 @@ width: 100%;
 }
 
 .friendMsg {
+  justify-content: left;
   margin-bottom: 1em;
   text-align: left;
   width: 100%;
@@ -195,4 +202,51 @@ a i {
   font-size: 8pt;
   color:rgba(238, 237, 237, 0.644);
   font-weight:100;
+}
+#profile-menu a::after {
+content: "|";
+padding-left: 20px;
+}
+#profile-menu a:last-child::after {
+  content: "";
+}
+
+label {
+  color: rgb(224, 236, 237) !important;
+}
+
+.postFooter {
+  display: inline;
+}
+
+.title {
+  color:rgba(0, 208, 255, 0.878) !important;
+}
+.title:hover {
+  color: white;
+}
+
+.title::after {
+  content: "";
+}
+
+.accordion * {
+display: inline;
+}
+
+.wrpr {
+  background-color: rgba(0, 0, 0, 0.666);
+  position: relative;
+}
+
+.label {
+  color:rgba(230, 230, 230, 0.877) !important;
+}
+
+.value {
+  color: white !important;
+}
+
+#messages {
+  overflow-x: hidden;
 }

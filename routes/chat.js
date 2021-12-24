@@ -26,10 +26,14 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-router.get('/:_id', ensureAuthenticated, chatController.getChatRoom)
-router.get('/', ensureAuthenticated, chatController.getChatView)
-router.post('/:roomId', ensureAuthenticated, chatController.postMessage)
 
 router.get('/chat-delete/:id', ensureAuthenticated, chatController.removeChatMessages)
 router.post('/send-img/:id', ensureAuthenticated, upload.single("file"), chatController.sendImage)
+
+router.get('/new-message', ensureAuthenticated, chatController.getNewMessage)
+router.get('/:roomId', ensureAuthenticated, chatController.getChatRoom)
+router.get('/', ensureAuthenticated, chatController.getChatView)
+router.post('/:roomId', ensureAuthenticated, chatController.postMessage)
+
+router.get('/test/:friendId',ensureAuthenticated,chatController.getChatR)
 module.exports = router

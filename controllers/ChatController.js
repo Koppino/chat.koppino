@@ -1,15 +1,36 @@
 const User = require("../models/User");
 const ChatRoom = require("../models/ChatRoom");
 const ChatMessage = require("../models/ChatMessage");
+const { resolveMx } = require("dns");
 const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 
+
+module.exports.getChatR = async (req, res) => {
+  const friendId = req.params.friendId;
+  let finalRoom;
+  const ids = `${req.user._id},${friendId}`;
+  let room = await ChatRoom.findOne({users : ids.split(',')}).exec();
+  if (room === null) {
+    const ids = `${friendId},${req.user._id}`;
+    let roomTwo = await ChatRoom.findOne({users: ids.split(',')}).exec();
+    finalRoom = roomTwo;
+    console.log("Try n.2" + roomTwo)
+    return finalRoom;
+  } else {
+    console.log("Try n.1" + room)
+    finalRoom = room;
+    return finalRoom;
+  }
+
+}
+
 module.exports.getChatRoom = (req, res) => {
-  const _id = req.params._id;
+  const roomId = req.params.roomId;
   let room;
   ChatRoom.find(
-    { users: req.user },
+    { users: req.user._id },
     null,
     { sort: { updatedAt: -1 } },
     (err, chatRooms) => {
@@ -18,14 +39,14 @@ module.exports.getChatRoom = (req, res) => {
       User.findOne({ _id: req.user._id }, (err, me) => {
         if (err) return console.log(err);
 
-        User.findOne({ _id: _id }, (err, chatUser) => {
+        User.findOne({ _id: roomId }, (err, chatUser) => {
           if (err) return console.log(err);
 
           ChatRoom.findOne(
             { users: [me, chatUser] },
             null,
             { sort: { updatedAt: -1 } },
-           async (err, chatRoom) => {
+            async (err, chatRoom) => {
               if (err) return console.log(err);
               if (!chatRoom) {
                 ChatRoom.findOne(
@@ -41,7 +62,7 @@ module.exports.getChatRoom = (req, res) => {
                         lastMessage: null,
                         messages: [],
                       });
-                      
+
                       newRoom.save(async (err) => {
                         if (err) return console.log(err);
                         chatUser.chatRooms.push(newRoom);
@@ -56,9 +77,9 @@ module.exports.getChatRoom = (req, res) => {
                         });
                       });
                     } else {
-                      if(chatRoom2.unreadMessage == req.user._id) {
-                        chatRoom2.unreadMessage = ""
-                        chatRoom2.save()
+                      if (chatRoom2.unreadMessage == req.user._id) {
+                        chatRoom2.unreadMessage = "";
+                        chatRoom2.save();
                       }
                       ChatMessage.find(
                         { room: chatRoom2._id },
@@ -78,9 +99,9 @@ module.exports.getChatRoom = (req, res) => {
                   }
                 );
               } else {
-                if(chatRoom.unreadMessage == req.user._id) {
-                  chatRoom.unreadMessage = ""
-                  chatRoom.save()
+                if (chatRoom.unreadMessage == req.user._id) {
+                  chatRoom.unreadMessage = "";
+                  chatRoom.save();
                 }
                 await ChatMessage.find(
                   { room: chatRoom._id },
@@ -142,7 +163,7 @@ module.exports.postMessage = (req, res) => {
         chatroom.messages.push(newMessage);
         chatroom.lastMessage = newMessage.message;
         chatroom.lastMessasgeTime = new Date(Date.now());
-        chatroom.unreadMessage = reciver
+        chatroom.unreadMessage = reciver;
         chatroom.save(() => {
           res.redirect(`/chat/${reciver}`);
         });
@@ -184,40 +205,46 @@ module.exports.removeChatMessages = (req, res) => {
   });
 };
 
-
-
 module.exports.sendImage = (req, res) => {
-  const id = req.params.id
-  console.log(req.body)
-  console.log(req.file)
-  ChatRoom.findOne({_id:id}, (err, chatroom) => {
-    if(err) console.log(err);
+  const id = req.params.id;
+  console.log(req.body);
+  console.log(req.file);
+  ChatRoom.findOne({ _id: id }, (err, chatroom) => {
+    if (err) console.log(err);
 
     const newMsg = new ChatMessage({
       imgUrl: req.file.path,
       msgType: "img",
       room: chatroom,
-      message:"poslal obrázek.",
+      message: "poslal obrázek.",
       senderName: req.user.username,
-      sender:req.user,
-    })
-    newMsg.save(()=> {
-      let chatuserid;
-    if (chatroom.usernames[0] == req.user.username) {
-      chatuserid = chatroom.users[1]
-    } else {
-      chatuserid = chatroom.users[0]
-    }
-    console.log(newMsg);
-    io.sockets.emit("new img msg", newMsg);
-    chatroom.messages.push(newMsg);
-    chatroom.lastMessage = newMsg.message;
-    chatroom.lastMessasgeTime = new Date(Date.now());
-    chatroom.unreadMessage = chatuserid
-    chatroom.save(() => {
-      res.redirect(`/chat/${chatuserid}`);
+      sender: req.user,
     });
-    })
-    
-  })
-}
+    newMsg.save(() => {
+      let chatuserid;
+      if (chatroom.usernames[0] == req.user.username) {
+        chatuserid = chatroom.users[1];
+      } else {
+        chatuserid = chatroom.users[0];
+      }
+      console.log(newMsg);
+      io.sockets.emit("new img msg", newMsg);
+      chatroom.messages.push(newMsg);
+      chatroom.lastMessage = newMsg.message;
+      chatroom.lastMessasgeTime = new Date(Date.now());
+      chatroom.unreadMessage = chatuserid;
+      chatroom.save(() => {
+        res.redirect(`/chat/${chatuserid}`);
+      });
+    });
+  });
+};
+
+module.exports.getNewMessage = (req, res) => {
+  User.find({}, (err, users) => {
+    if (err) {
+      console.log(err);
+    }
+    res.render("chat/new-message", { user: req.user, users: users });
+  });
+};

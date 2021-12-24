@@ -12,8 +12,8 @@ const flash = require("connect-flash");
 const { request } = require("express");
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const timeSince = require('./public/js/timeformat').timeSince;
-const locals = require('./config/locals')
+const locals = require("./config/locals");
+const Post = require("./models/Post");
 require("./config/passport")(passport);
 db = mongoURI;
 mongoose
@@ -38,11 +38,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan("dev"));
 
-app.locals.formatTime = locals.formatDate
+app.locals.formatTime = locals.formatDate;
 app.use("/", require("./routes/index"));
 app.use("/users", require("./routes/users"));
 app.use("/chat", require("./routes/chat"));
 app.use("/settings", require("./routes/settings"));
+app.use("/posts", require("./routes/posts"));
 app.use("/api", require("./routes/api"));
 let chusers = [];
 let userswithnick = [];
@@ -99,14 +100,26 @@ io.on("connection", (client) => {
   });
   client.on("new img msg", (data) => {
     console.log(data);
-    io.emit("new img message", data);
-  })
+    io.emit("new img msg", data);
+  });
   client.on("chat delete", (data) => {
     console.log(data + "picus");
     io.emit("chat delete", data);
   });
-});
+  client.on('add view stats', (data) => {
+    Post.findOne({_id: data.postId}, (err, pst) => {
+      if(err) console.log(err);
+        pst.views++;
+         pst.save(()=> { console.log('done.')})
+      })
+     
+    })
+  })
 
 http.listen("1337", () => {
+  Post.findOne({_id:"61c4babee70fba2700e4787a"}, (err,post) => {
+    post.views = 0
+    post.save()
+  })
   console.log("server is running.");
 });

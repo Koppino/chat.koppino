@@ -1,0 +1,99 @@
+<div class="ui stackable two column grid">
+    <div class="four wide column">
+      <h1>
+        <%-username%>
+      </h1>
+    </div>
+    <div class="twelve wide column">
+      <div class="ui ">
+        <h4 class="header">Nejnovejší příspěvky</h4>
+        <%posts.forEach(post=> {%>
+          <div class="ui segment" style="margin-bottom: 1em;">
+            <h4>
+              <img class="avatar" src="/files/admin-file-<%-post.sender%>.jpeg" alt="">
+              <div style="display: inline;">
+                <%-post.senderName%>
+                  <p style="letter-spacing: normal;display:inline;font-size: 8pt;color:rgba(223, 223, 218, 0.503)">
+  
+                    před <%= formatTime(post.createdAt.getTime().toString())%>
+                  </p>
+              </div>
+            </h4>
+            <div class="ui divider"></div>
+            <h4>
+              <a href="/posts/<%-post._id%>">
+                <%-post.title%>
+              </a>
+            </h4>
+            <p style="padding-left:20px;">
+              <%-post.body%>
+            </p>
+            <% if(post.type===1) { %>
+              <img class="ui large image" src="<%-post.mainFotoUrl%>" alt="">
+              <%} else if(post.type===2) {%>
+                <video src="/<%-post.filesUrl[0]%>" controls class="ui big image"></video>
+                <%}%>
+                  <div class="ui divider"></div>
+                  <div class="title" style="display: inline;">
+                    <a href="/posts/add-like/<%-post._id%>">
+                      <i class="thumbs up icon"></i>
+                     (<%-post.likes.length%>)
+                    </a>
+                    
+                  </a>
+                  <div class="ui accordion postFooter" style="display: inline !important;">
+                    <div class="title">
+                      <i class="comment icon"></i>
+                       ( <%-post.komentare.length%> )
+                    </div>
+                    <div class="content">
+                      <div class="ui segment">
+  
+                        <ul class="ui vertical" style="width: 100% !important;">
+                          <%if(post.komentare.length===0) { %>
+                            <li style="display: block; margin-bottom: 1rem;">
+                              <h4>Žádné komentáře.</h4>
+                            </li>
+                            <%}%>
+                              <%post.komentare.forEach(comment=> { %>
+                                <li class="friendMsg" style="padding-top: 1em;">
+                                  <img src="/files/admin-file-<%-comment.sender%>.jpeg" alt="" srcset="" class="avatar"
+                                    style="vertical-align: middle;float: left;">
+                                  <div class="friendMsgSeg">
+                                    <p style="color:teal;">
+                                      <%-comment.senderName%> :
+                                    </p>
+                                    <p style="color: white !important;">
+                                      <%-comment.comment%>
+                                    </p>
+                                    <div class="msg-date" id="chat-time" style="display:block;">
+                                      <%= formatTime(comment.createdAt.getTime().toString())%>
+                                    </div>
+                                  </div>
+                                </li>
+                                <%})%>
+                        </ul>
+  
+  
+                        <form class="ui form" action="/posts/add-comment/<%-post._id%>" method="post">
+                          <div class="inline field" style="display: inline;width: 100%;">
+                            <input type="text" name="comment" id="" style="display:inline; width: 75%;">
+                            <button type="submit"
+                              style="display:inline; color:teal;background-color: transparent;border:0;">Odeslat</button>
+                          </div>
+  
+                        </form>
+  
+                      </div>
+                    </div>
+                  </div>
+          </div>
+          </div>
+          <%})%>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    $('.ui.accordion').accordion();
+  </script>

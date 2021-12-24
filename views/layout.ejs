@@ -9,15 +9,16 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.css" rel="stylesheet"/>
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+     <link rel="stylesheet" href="/css/style.css">
     <title>CHAT KOPPINO</title>
 </head>
 
 <body>
     <div id="logo"></div>
-    <% if(user) { %>
+ 
 
         <nav class="ui stackable menu segment" id="login-segment-menu">
             <div class="item ">
@@ -26,7 +27,7 @@
                     <input type="text" placeholder="Search users..." style="color: azure;">
                 </div>
             </div>
-            <a class="item menuitem" href="/dashboard">
+            <a class="item menuitem" href="/">
                 <i class="icon home"></i> Přehled
             </a>
             <a class="item menuitem" id="chat_item" href="/chat">
@@ -37,22 +38,17 @@
             </a>
             <a class="right item menuitem" href="/settings">
                 <i class="icon user"></i>
-                <%- user.username %>
+<%-user?.username%>
             </a>
         </nav>
-        <input type="hidden" name="" id="myId" value="<%-user._id%>">
-        <input type="hidden" name="" id="myname" class="usernameInput" value="<%-user.username%>">
-        <% } %>
             <div id="login-segment">
                 <%- body %>
             </div>
 
 
-
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.7/semantic.min.js"></script>
+            <input type="hidden" name="" id="myId" value="<%-user?._id%>">
+            <input type="hidden" name="" id="myname" class="usernameInput" value="<%-user?.username%>">
             <script src="/js/script.js"></script>
-            <script src="/js/timeformat.js"></script>
 </body>
 
 </html>
