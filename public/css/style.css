@@ -21,6 +21,7 @@ h2,h3,h4 {
 #login-segment {
   color:rgb(224, 236, 237);
   margin: 0;
+  margin-top:-80px;
 }
 #login-segment-menu {
   top: -80px;
