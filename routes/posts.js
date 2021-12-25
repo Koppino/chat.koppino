@@ -63,4 +63,6 @@ router.get('/:postId', postController.getPost)
 
 router.get('/add-like/:postId', ensureAuthenticated , postController.addLike);
 
+router.get('/', postController.getPostsByCreatedAt)
+
 module.exports = router;

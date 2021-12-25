@@ -10,9 +10,7 @@ module.exports.getDashboard = (req, res) => {
       posts.comments = comments;
       res.render('dashboard', {user:req.user,posts:posts,username:req.user.username})
     })
-   
   })
-    
 };
 module.exports.getHomepage = (req, res) => {
   Post.find({},null,{sort:{createdAt:-1}},(err, posts) => {
@@ -22,6 +20,5 @@ module.exports.getHomepage = (req, res) => {
       posts.comments = comments;
       res.render('homepage', {user:req.user,posts:posts,username:req.user?.username})
     })
-   
   })
 };

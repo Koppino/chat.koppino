@@ -1,6 +1,6 @@
 const Like = require('../models/Like');
 const Post = require('../models/Post')
-
+const Comment = require('../models/Comment')
 module.exports.addPost = async (req, res) => {
   let type = 1;
   let filesUrlArray = [];
@@ -71,5 +71,16 @@ module.exports.addLike = (req, res) => {
       }
     })
 
+  })
+}
+
+module.exports.getPostsByCreatedAt = (req, res) => {
+  Post.find({},null,{sort:{createdAt:-1}},(err, posts) => {
+    if(err) console.log(err);
+    Comment.find({_id:posts.comments},null,{sort:{createdAt:-1}},(err, comments) => {
+      if(err) console.log(err);
+      posts.comments = comments;
+      res.render('homepage', {user:req.user,posts:posts,username:req.user?.username})
+    })
   })
 }
