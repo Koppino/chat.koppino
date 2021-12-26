@@ -1,4 +1,4 @@
-dbPassword = 'mongodb://localhost:27017/chat-koppino-1';
+dbPassword = 'mongodb://localhost:27017/www-chat-koppino-cz';
 
 module.exports = {
     mongoURI: dbPassword,
