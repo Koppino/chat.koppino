@@ -45,7 +45,7 @@
             <img class="ui large image" src="<%-post.mainFotoUrl%>" alt="">
             <%} else if(post.type===2) {%>
               <video src="/<%-post.filesUrl[0]%>" onplaying='addView("<%-post._id%>")' class="ui big image"
-                style="max-height: 300px;" controls></video>
+                style="max-height: 300px; max-width: 300px;" controls></video>
               <%}%>
                 <div class="ui divider"></div>
                 <div class="title" style="display: inline;">

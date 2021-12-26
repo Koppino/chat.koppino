@@ -250,3 +250,8 @@ display: inline;
 #messages {
   overflow-x: hidden;
 }
+
+
+select,option,datalist {
+  background-color: rgba(0, 0, 0, 0.392);
+}

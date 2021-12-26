@@ -29,7 +29,9 @@ module.exports.getChatR = async (req, res) => {
 module.exports.getChatRoom = (req, res) => {
   const roomId = req.params.roomId;
   let room;
-  ChatRoom.find(
+  User.find({}, (err, users) => {
+    if(err) console.log(err)
+    ChatRoom.find(
     { users: req.user._id },
     null,
     { sort: { updatedAt: -1 } },
@@ -74,6 +76,7 @@ module.exports.getChatRoom = (req, res) => {
                           chatRooms: chatRooms,
                           chatRoom: newRoom,
                           chatMessages: [],
+                          users:users
                         });
                       });
                     } else {
@@ -92,6 +95,7 @@ module.exports.getChatRoom = (req, res) => {
                             chatRooms: chatRooms,
                             chatRoom: chatRoom2,
                             chatMessages: messages,
+                            users:users
                           });
                         }
                       );
@@ -115,6 +119,7 @@ module.exports.getChatRoom = (req, res) => {
                       chatRoom: chatRoom,
                       chatRooms: chatRooms,
                       chatMessages: messages,
+                      users:users
                     });
                   }
                 );
@@ -125,10 +130,14 @@ module.exports.getChatRoom = (req, res) => {
       });
     }
   );
+  })
+  
 };
 
 module.exports.getChatView = (req, res) => {
-  ChatRoom.find(
+   User.find({}, (err, users) => {
+     if(err) console.log(err);
+      ChatRoom.find(
     { users: req.user },
     null,
     { sort: { updatedAt: -1 } },
@@ -139,9 +148,12 @@ module.exports.getChatView = (req, res) => {
         chatRooms: rooms,
         chatRoom: null,
         chatMessages: [],
+        users:users
       });
     }
   );
+   })
+ 
 };
 
 module.exports.postMessage = (req, res) => {

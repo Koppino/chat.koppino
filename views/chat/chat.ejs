@@ -194,7 +194,8 @@
       </ul>
 
       <% if(chatRoom != null) { %>
-      <form class="ui form" method="POST" action="/chat/<%-chatRoom._id%>">
+      <form class="ui form">
+        <input id="roomId"type="hidden" value="<%-chatRoom._id%>" name="roomId">
         <% if(chatRoom.usernames[0]==user.username) { %>
         <input
           id="reciver"
@@ -235,7 +236,7 @@
             placeholder="Text your message."
             required
           />
-          <button class="btn" id="send-message">Send</button>
+          <div class="btn" id="send-message">Send</div>
         </div>
         <div style="display: inline; justify-items: left; float: left; margin-bottom: 2em;">
           <a class="test" id="test"><i class="trash icon"></i></a>
@@ -265,10 +266,20 @@
 <div class="ui newmsg modal">
     <div class="content" style="background-color: rgba(50, 50, 50, 0.898)">
       <form class="ui form">
-        <div class="ui icon input">
-          <input type="text" placeholder="Search...">
-         <i class="search icon"></i>
+        <div class="ui icon input"style="width:320px;">
+          <input type="text" placeholder="User..." list="text_editors" style="width:120px;">
+          <datalist id="text_editors">
+            <select>
+            <% users.forEach(userr => { %>
+            <option value="<%-userr.username%>"><%-userr.username%></option>
+            <%})%>
+          </select>
+        </datalist>
+         
+         <input type="text" class="ui form"style="width:220px !important;" placeholder="text....">
+         <div  class="ui button">Odeslat</div>
          </div>
+       
       </form>
     </div>
   </div>

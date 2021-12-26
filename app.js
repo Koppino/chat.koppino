@@ -14,6 +14,8 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const locals = require("./config/locals");
 const Post = require("./models/Post");
+const ChatMessage = require("./models/ChatMessage");
+const ChatRoom = require("./models/ChatRoom");
 require("./config/passport")(passport);
 db = mongoURI;
 mongoose
@@ -95,8 +97,29 @@ io.on("connection", (client) => {
     );
   });
   client.on("new message", (data) => {
-    console.log(data);
     io.emit("new message", data);
+    ChatRoom.findOne({ _id: data.room }, (err, chatroom) => {
+      if (err) console.log(err);
+      if (chatroom) {
+        const newMessage = ChatMessage({
+          sender: data.sender,
+          senderName: data.username,
+          message: data.message,
+          room: chatroom,
+        });
+        newMessage.save((err, msg) => {
+          if (err) console.log(err);
+          io.sockets.emit("new msg", newMessage);
+          chatroom.messages.push(newMessage);
+          chatroom.lastMessage = newMessage.message;
+          chatroom.lastMessasgeTime = new Date(Date.now());
+          chatroom.unreadMessage = data.reciver;
+          chatroom.save(() => {
+            console.log("done.");
+          });
+        });
+      }
+    });
   });
   client.on("new img msg", (data) => {
     console.log(data);
@@ -106,17 +129,17 @@ io.on("connection", (client) => {
     console.log(data + "picus");
     io.emit("chat delete", data);
   });
-  client.on('add view stats', (data) => {
-    Post.findOne({_id: data.postId}, (err, pst) => {
-      if(err) console.log(err);
-        pst.views++;
-         pst.save(()=> { console.log('done.')})
-      })
-     
-    })
-  })
+  client.on("add view stats", (data) => {
+    Post.findOne({ _id: data.postId }, (err, pst) => {
+      if (err) console.log(err);
+      pst.views++;
+      pst.save(() => {
+        console.log("done.");
+      });
+    });
+  });
+});
 
 http.listen("1337", () => {
- 
   console.log("server is running.");
 });

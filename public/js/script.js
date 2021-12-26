@@ -4,7 +4,7 @@ $(".small.image").on("click", function () {
   $(".galerry.modal").modal("show").modal({});
 });
 $(".plus-button").on("click", function () {
-  $(".newmsg.modal").modal('show').modal({});
+  $(".newmsg.modal").modal("show").modal({});
 });
 let chusers = {};
 var socket = io();
@@ -24,6 +24,7 @@ var reciver = document.getElementById("reciver");
 var myname = document.getElementById("myname");
 var sender = document.getElementById("sender");
 var myId = document.getElementById("myId");
+var roomId = document.getElementById("roomId");
 socket.on("new img msg", (data) => {
   if (data.reciver == myId.value) {
     newMsgNum++;
@@ -62,8 +63,19 @@ sendButton.addEventListener("click", () => {
     username: myname.value,
     message: `${messageInput.value}`,
     reciver: reciver.value,
+    room: roomId.value,
   });
+  console.log(messageInput.value);
+  let msgs = document.getElementById("messages");
+  console.log(msgs);
+  let child = document.createElement("li");
+  child.innerHTML = `<img src="/files/admin-file-${sender.value}.jpeg" class="avatar" style="vertical-align: middle;float: right;"><div class="myMsgSeg"> <p>${messageInput.value}</p><div class="msg-date" id="chat-time">právě teď</div></div>`;
+  msgs.appendChild(child);
+  msgs.scrollTop = msgs.scrollHeight
+  messageInput.value = ""
 });
+
+
 const emitDeleteChat = (chatRoom) => {
   socket.emit("chat delete", { room: chatRoom });
 };
@@ -79,10 +91,9 @@ imgSend.addEventListener("click", () => {
     username: myname.value,
     message: "poslal obrazek",
     reciver: reciver.value,
+    room: roomId,
   });
 });
-
-
 
 $(".test").on("click", function () {
   $(".del.modal")
