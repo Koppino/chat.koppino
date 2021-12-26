@@ -5,10 +5,13 @@
         <h4>MENU</h4>
         <div class="ui divider"></div>
       </li>
-      <li class="item" style="height: 39px; vertical-align: middle;">
-        <a href="/posts/" style="vertical-align: middle;height: 39px;padding-left:2em; color:white !important;">Nejnovejší</a>
-        <div class="ui divider"></div>
-      </li>
+      <a class="item" href="">
+        <li style=" vertical-align: middle;">
+        Nejnovější
+    </li>
+  </a>
+      <div class="ui divider"></div>
+
 
   </div>
   <div class="twelve wide column">
@@ -25,7 +28,7 @@
 
                   před <%= formatTime(post.createdAt.getTime().toString())%>
                 </p>
-                <p style="display: inline;color: rgba(255, 255, 255, 0.927);font-size: 10pt;"> - přidal :</p>
+                <p style="display: inline;color: rgba(255, 255, 255, 0.927);font-size: 10pt;"> - přidal:</p>
                 <h4 style="display: inline; padding-left: 0;">
                   <a href="/posts/<%-post._id%>">
                     <%-post.title%>
@@ -46,14 +49,15 @@
               <%}%>
                 <div class="ui divider"></div>
                 <div class="title" style="display: inline;">
-                  <a href="/posts/add-like/<%-post._id%>">
+                  <a href="/posts/add-like/<%-post._id%>" style="display: inline;">
                     <i class="thumbs up icon"></i>
                     (<%-post.likes.length%>)
                   </a>
 
                   </a>
                   <div class="ui accordion postFooter" style="display: inline !important;">
-                    <div class="title">
+                    <div class="title"
+                      style="display: inline !important; color: rgba(217, 236, 240, 0.878) !important;">
                       <i class="comment icon"></i>
                       ( <%-post.komentare.length%> )
                     </div>

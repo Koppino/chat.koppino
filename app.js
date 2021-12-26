@@ -117,9 +117,6 @@ io.on("connection", (client) => {
   })
 
 http.listen("1337", () => {
-  Post.findOne({_id:"61c4babee70fba2700e4787a"}, (err,post) => {
-    post.views = 0
-    post.save()
-  })
+ 
   console.log("server is running.");
 });
